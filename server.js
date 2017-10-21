@@ -24,7 +24,7 @@ app.use(
         host     : 'localhost',
         user     : 'root',
         password : '',
-        database : 'test',
+        database : 'weddingdb',
         debug    : false //set true if you wanna see debug logger
     },'request')
 
@@ -51,7 +51,7 @@ router.use(function(req, res, next) {
     next();
 });
 
-var curut = router.route('/user');
+var curut = router.route('/invitado');
 
 
 //show the CRUD interface | GET
@@ -62,7 +62,7 @@ curut.get(function(req,res,next){
 
         if (err) return next("Cannot Connect");
 
-        var query = conn.query('SELECT * FROM t_user',function(err,rows){
+        var query = conn.query('SELECT * FROM Invitado',function(err,rows){
 
             if(err){
                 console.log(err);
@@ -80,9 +80,8 @@ curut.get(function(req,res,next){
 curut.post(function(req,res,next){
 
     //validation
-    req.assert('name','Name is required').notEmpty();
-    req.assert('email','A valid email is required').isEmail();
-    req.assert('password','Enter a password 6 - 20').len(6,20);
+    req.assert('nombre','Nombre es requerido').notEmpty();
+    req.assert('correo','Correo valido requerido').isEmail();
 
     var errors = req.validationErrors();
     if(errors){
@@ -92,9 +91,13 @@ curut.post(function(req,res,next){
 
     //get data
     var data = {
-        name:req.body.name,
-        email:req.body.email,
-        password:req.body.password
+        nombre:req.body.nombre,
+        correo:req.body.correo,
+        familia:req.body.familia,
+        registro: req.body.registro,
+        menor: req.body.menor,
+        adultos: req.body.adultos,
+        musica:req.body.musica
      };
 
     //inserting into mysql
@@ -102,7 +105,7 @@ curut.post(function(req,res,next){
 
         if (err) return next("Cannot Connect");
 
-        var query = conn.query("INSERT INTO t_user set ? ",data, function(err, rows){
+        var query = conn.query("INSERT INTO Invitado set ? ",data, function(err, rows){
 
            if(err){
                 console.log(err);
@@ -119,7 +122,7 @@ curut.post(function(req,res,next){
 
 
 //now for Single route (GET,DELETE,PUT)
-var curut2 = router.route('/user/:user_id');
+var curut2 = router.route('/invitado/:correo');
 
 /*------------------------------------------------------
 route.all is extremely useful. you can use it to do
@@ -137,13 +140,13 @@ curut2.all(function(req,res,next){
 //get data to update
 curut2.get(function(req,res,next){
 
-    var user_id = req.params.user_id;
+    var user_id = req.params.correo;
 
     req.getConnection(function(err,conn){
 
         if (err) return next("Cannot Connect");
 
-        var query = conn.query("SELECT * FROM t_user WHERE user_id = ? ",[user_id],function(err,rows){
+        var query = conn.query("SELECT * FROM Invitado WHERE correo = ? ",[user_id],function(err,rows){
 
             if(err){
                 console.log(err);
@@ -163,12 +166,12 @@ curut2.get(function(req,res,next){
 
 //update data
 curut2.put(function(req,res,next){
-    var user_id = req.params.user_id;
+    var user_id = req.params.correo;
 
     //validation
-    req.assert('name','Name is required').notEmpty();
-    req.assert('email','A valid email is required').isEmail();
-    req.assert('password','Enter a password 6 - 20').len(6,20);
+
+    req.assert('nombre','Nombre es requerido').notEmpty();
+    req.assert('correo','Correo valido requerido').isEmail();
 
     var errors = req.validationErrors();
     if(errors){
@@ -178,9 +181,13 @@ curut2.put(function(req,res,next){
 
     //get data
     var data = {
-        name:req.body.name,
-        email:req.body.email,
-        password:req.body.password
+          nombre:req.body.nombre,
+          correo:req.body.correo,
+          familia:req.body.familia,
+          registro: req.body.registro,
+          menor: req.body.menor,
+          adultos: req.body.adultos,
+          musica:req.body.musica
      };
 
     //inserting into mysql
@@ -188,7 +195,7 @@ curut2.put(function(req,res,next){
 
         if (err) return next("Cannot Connect");
 
-        var query = conn.query("UPDATE t_user set ? WHERE user_id = ? ",[data,user_id], function(err, rows){
+        var query = conn.query("UPDATE Invitado set ? WHERE correo = ? ",[data,user_id], function(err, rows){
 
            if(err){
                 console.log(err);
@@ -206,13 +213,13 @@ curut2.put(function(req,res,next){
 //delete data
 curut2.delete(function(req,res,next){
 
-    var user_id = req.params.user_id;
+    var user_id = req.params.correo;
 
      req.getConnection(function (err, conn) {
 
         if (err) return next("Cannot Connect");
 
-        var query = conn.query("DELETE FROM t_user  WHERE user_id = ? ",[user_id], function(err, rows){
+        var query = conn.query("DELETE FROM Invitado  WHERE correo = ? ",[user_id], function(err, rows){
 
              if(err){
                 console.log(err);

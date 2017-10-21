@@ -9,14 +9,20 @@
 <form method="post" action="" id="the-form">
     <table cellpadding="11">
     <tr>
-        <td class="label">Name</td><td>: <input type="text" name="name" value="<%=data[0].name%>"></td>
+        <td class="label">Nombre</td><td>: <input type="text" name="Nombre" value="<%=data[0].nombre%>"></td>
      </tr>
     <tr>
-        <td class="label">Email</td><td>: <input type="text" name="email" value="<%=data[0].email%>"></td>
+        <td class="label">Email</td><td>: <input type="text" name="correo" value="<%=data[0].correo%>"></td>
      </tr>
+     <tr>
+       <td class="label">Familia</td><td>: <input type="text" name="familia" value="<%=data[0].familia%>"></td>
+    </tr>
       <tr>
-        <td class="label">Password</td><td>: <input type="password" name="password" value="<%=data[0].password%>"></td>
+        <td class="label">adultos</td><td>: <input type="number" name="adultos" value="<%=data[0].adultos%>"></td>
      </tr>
+     <tr>
+       <td class="label">menores</td><td>: <input type="number" name="menor" value="<%=data[0].menor%>"></td>
+    </tr>
      <tr>
         <td class="label"></td>
         <td>
@@ -26,34 +32,34 @@
     </table>
 </form>
  <script>
-    
+
         function saveUser(){
-           
+
            $.ajax({
-            
-            url:"/api/user/"+<%=data[0].user_id%>,
+
+            url:"/api/invitado/"+<%=data[0].correo%>,
             type:"put",
             data:$("#the-form").serialize(),
             success:function(res){
-                
-                window.location.href = '/api/user';
+
+                window.location.href = '/api/invitado';
                 return false;
             },
             error:function(xhr, status, error){
-                
+
                 console.log(xhr.responseText);
                 var err = '';
                 $.each(JSON.parse(xhr.responseText) , function(i, item) {
-                   
+
                      err +='<li>'+item.msg+'</li>';
                 });
-                $(".err-area").html(err);    
+                $(".err-area").html(err);
                 return false;
             }
-            
+
            });
         }
-    
+
     </script>
 </body>
 </html>
