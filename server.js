@@ -21,9 +21,9 @@ var connection  = require('express-myconnection'),
 app.use(
 
     connection(mysql,{
-        host     : 'localhost',
+        host     : '107.170.240.37',
         user     : 'root',
-        password : '',
+        password : 'oyuky2525',
         database : 'weddingdb',
         debug    : false //set true if you wanna see debug logger
     },'request')
@@ -119,7 +119,31 @@ curut.post(function(req,res,next){
      });
 
 });
+var curut3 = router.route('/getinvitado/:correo');
 
+
+//show the CRUD interface | GET
+curut3.get(function(req,res,next){
+
+  var user_id = req.params.correo;
+
+  req.getConnection(function(err,conn){
+
+      if (err) return next("Cannot Connect");
+
+      var query = conn.query("SELECT * FROM Invitado WHERE correo = ? ",[user_id],function(err,rows){
+
+          if(err){
+              console.log(err);
+              return next("Mysql error, check your query");
+          }
+            res.json({data:rows});
+
+         });
+
+    });
+
+});
 
 //now for Single route (GET,DELETE,PUT)
 var curut2 = router.route('/invitado/:correo');
